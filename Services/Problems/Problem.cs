@@ -1,24 +1,28 @@
 ﻿namespace josephcarino.Advent2021.Services.Problems
 {
-    public abstract class Problem
+    public abstract class Problem : IProblem
     {
-        public Problem(int problemId, string description1, string description2)
+        private ProblemSettings _settings;
+        private readonly int _problemId;
+        private readonly string _description1;
+        private readonly string _description2;
+
+        public Problem(int problemId, ProblemSettings problemSettings)
         {
-            ProblemId = problemId;
-            Description1 = File.ReadAllText(description1);
-            Description2 = File.ReadAllText(description2);
+            _settings = problemSettings;
+            _problemId = problemId;
+            _description1 = File.Exists(Path.Combine(Directory.GetCurrentDirectory(), String.Format(_settings.BaseDescriptionsPath, ProblemId, 1))) 
+                ? File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), String.Format(_settings.BaseDescriptionsPath, ProblemId, 1))) : "???";
+            _description2 = File.Exists(Path.Combine(Directory.GetCurrentDirectory(), String.Format(_settings.BaseDescriptionsPath, ProblemId, 2)))
+                ? File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), String.Format(_settings.BaseDescriptionsPath, ProblemId, 2))) : "???";
         }
 
-        public int ProblemId { get; set; }
-        public string Description1 { get; set; }
-        public string Description2 { get; set; }
+        public int ProblemId { get => _problemId; }
+        public string Description1 { get => _description1; }
+        public string Description2 { get => _description2; }
 
-        public abstract Task<string> Run(string[] input, ProblemPart part);
-    }
+        public abstract Task<string> RunPart1(string[] input);
 
-    public enum ProblemPart
-    {
-        part1,
-        part2
+        public abstract Task<string> RunPart2(string[] input);
     }
 }

@@ -6,9 +6,9 @@ namespace josephcarino.Advent2021.Services
     {
         private Dictionary<int, Problem> problems;
 
-        public ProblemService(Dictionary<int, Problem> problems)
+        public ProblemService(IEnumerable<Problem> problems)
         {
-            this.problems = problems;
+            this.problems = problems.ToDictionary(k => k.ProblemId, v => v);
         }
 
         public IEnumerable<int> GetProblemIds()
@@ -32,7 +32,7 @@ namespace josephcarino.Advent2021.Services
 
             Problem problem = GetProblemFromId(problemId);
 
-            return problem.Run(input, part);
+            return part == ProblemPart.part1 ? problem.RunPart1(input) : problem.RunPart2(input);
         }
 
         private Problem GetProblemFromId(int problemId)
@@ -42,12 +42,18 @@ namespace josephcarino.Advent2021.Services
 
             if (!problems.TryGetValue(problemId, out Problem? problem))
             {
-                throw new NotImplementedException($"Problem with id:{problemId} is not implemented");
+                throw new NotImplementedException($"Problem with id={problemId} is not implemented");
             }
             else
             {
                 return problem;
             }
         }
+    }
+
+    public enum ProblemPart
+    {
+        part1,
+        part2
     }
 }

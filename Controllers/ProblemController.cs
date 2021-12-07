@@ -22,7 +22,7 @@ namespace josephcarino.Advent2021.Controllers
         }
 
         [HttpGet("{id}/description/{partId}")]
-        public ContentResult GetProblemDescription1(int id, int partId)
+        public ContentResult GetProblemDescription(int id, int partId)
         {
             return base.Content(problemService.GetProblemDescription(id, GetProblemPartFromInt(partId)), "text/html");
         }
