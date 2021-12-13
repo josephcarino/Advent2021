@@ -1,4 +1,6 @@
-﻿namespace josephcarino.Advent2021.Services.Problems
+﻿using josephcarino.Advent2021.Services.Problems;
+
+namespace josephcarino.Advent2021.Services.Problems.Implementation
 {
     public abstract class Problem : IProblem
     {

@@ -24,18 +24,18 @@ namespace josephcarino.Advent2021.Controllers
         [HttpGet("{id}/description/{partId}")]
         public ContentResult GetProblemDescription(int id, int partId)
         {
-            return base.Content(problemService.GetProblemDescription(id, GetProblemPartFromInt(partId)), "text/html");
+            return base.Content(problemService.GetProblemDescription(id, GetProblemPartByInt(partId)), "text/html");
         }
 
         [HttpPost("{id}/{partId}/answer")]
         public async Task<ContentResult> AnswerProblem(int id, int partId, [FromBody] string[] input)
         {
-            ProblemPart problemPart = GetProblemPartFromInt(partId);
+            ProblemPart problemPart = GetProblemPartByInt(partId);
 
             return base.Content(await problemService.AnswerProblem(id, input, problemPart));
         }
 
-        private ProblemPart GetProblemPartFromInt(int partId) => partId switch
+        private ProblemPart GetProblemPartByInt(int partId) => partId switch
         {
             1 => ProblemPart.part1,
             2 => ProblemPart.part2,

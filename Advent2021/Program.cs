@@ -1,6 +1,7 @@
 using josephcarino.Advent2021;
 using josephcarino.Advent2021.Services;
 using josephcarino.Advent2021.Services.Problems;
+using josephcarino.Advent2021.Services.Problems.Implementation;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,22 +30,15 @@ void ConfigureServices(ConfigurationManager configuration, IServiceCollection se
     configuration.Bind("ProblemSettings", problemSettings);
     services.AddSingleton<ProblemSettings>(problemSettings);
 
-    services.AddControllersWithViews(); 
-    services.AddSingleton<ProblemService>();
-    IEnumerable<IProblem?>? problems = Assembly.GetAssembly(typeof(Problem))?
-        .GetTypes().Where(TheType => TheType.IsClass && !TheType.IsAbstract && TheType.IsSubclassOf(typeof(Problem)))
-        .Select(a => Activator.CreateInstance(a, new object[] {problemSettings}) as IProblem);
+    services.AddControllersWithViews();
 
-    if (problems is not null)
-    {
-        foreach (IProblem? problem in problems)
-        {
-            if (problem is not null)
-            {
-                services.AddSingleton<IProblem>(problem);
-            }
-        }
-    }
+    Func<IEnumerable<IProblem?>> createProblems = () => Assembly.GetAssembly(typeof(Problem))!
+        .GetTypes().Where(TheType => TheType.IsClass && !TheType.IsAbstract && TheType.IsSubclassOf(typeof(Problem)))
+        .Select(a => Activator.CreateInstance(a, new object[] { problemSettings }) as IProblem);
+
+    services.AddSingleton(createProblems);
+    services.AddSingleton<ProblemService>();
+    services.AddSingleton<IProblemFactory, ProblemFactory>();
 }
 
 void ConfigureMiddleware(IApplicationBuilder app, IServiceProvider services)

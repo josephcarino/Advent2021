@@ -10,6 +10,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
     <RootNamespace>josephcarino.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,10 +22,6 @@
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\Problems\Descriptions\" />
   </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

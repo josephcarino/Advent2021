@@ -1,4 +1,4 @@
-﻿namespace josephcarino.Advent2021.Services.Problems
+﻿namespace josephcarino.Advent2021.Services.Problems.Implementation
 {
     public class Problem1 : Problem
     {
