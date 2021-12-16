@@ -1,4 +1,5 @@
-﻿using josephcarino.Advent2021.Services.Problems;
+﻿using josephcarino.Advent2021.Helpers;
+using josephcarino.Advent2021.Services.Problems;
 
 namespace josephcarino.Advent2021.Services.Problems.Implementation
 {
@@ -9,14 +10,12 @@ namespace josephcarino.Advent2021.Services.Problems.Implementation
         private readonly string _description1;
         private readonly string _description2;
 
-        public Problem(int problemId, ProblemSettings problemSettings)
+        public Problem(int problemId, ProblemSettings problemSettings, IFileHelper fileHelper)
         {
             _settings = problemSettings;
             _problemId = problemId;
-            _description1 = File.Exists(Path.Combine(Directory.GetCurrentDirectory(), String.Format(_settings.BaseDescriptionsPath, ProblemId, 1))) 
-                ? File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), String.Format(_settings.BaseDescriptionsPath, ProblemId, 1))) : "???";
-            _description2 = File.Exists(Path.Combine(Directory.GetCurrentDirectory(), String.Format(_settings.BaseDescriptionsPath, ProblemId, 2)))
-                ? File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), String.Format(_settings.BaseDescriptionsPath, ProblemId, 2))) : "???";
+            _description1 = fileHelper.ReadDescriptionFromFile(_settings.BaseDescriptionsPath, ProblemId, 1);
+            _description2 = fileHelper.ReadDescriptionFromFile(_settings.BaseDescriptionsPath, ProblemId, 2);
         }
 
         public int ProblemId { get => _problemId; }
