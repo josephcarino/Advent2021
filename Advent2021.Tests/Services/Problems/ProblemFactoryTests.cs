@@ -10,11 +10,11 @@ namespace josephcarino.Advent2021.Tests.Services.Problems
 {
     public class ProblemFactoryTests : TestBase
     {
-        private Mock<Func<IEnumerable<IProblem?>>> _problemCreateFunc;
+        private Mock<Func<IList<object>, IEnumerable<IProblem?>>> _problemCreateFunc;
 
         public ProblemFactoryTests() : base()
         {
-            _problemCreateFunc = _fixture.Create<Mock<Func<IEnumerable<IProblem?>>>>();
+            _problemCreateFunc = _fixture.Create<Mock<Func<IList<object>, IEnumerable<IProblem?>>>>();
             _fixture.Inject(_problemCreateFunc.Object);
         }
 
@@ -22,7 +22,7 @@ namespace josephcarino.Advent2021.Tests.Services.Problems
         [MemberData(nameof(ProblemIdsData))]
         public void GetProblemIds_ShouldReturnNonNullKeys(List<IProblem?> input, IEnumerable<int> expectedOutput)
         {
-            _problemCreateFunc.Setup(x => x()).Returns(input);
+            _problemCreateFunc.Setup(x => x(It.IsAny<IList<object>>())).Returns(input);
             var sut = _fixture.Create<ProblemFactory>(); //have to create here as func above is used in constructor, and so needs to be Setup before creating sut
 
             var ret = sut.GetProblemIds();
@@ -40,7 +40,7 @@ namespace josephcarino.Advent2021.Tests.Services.Problems
         public void GetProblemById_ShouldReturnCorrectProblem(int id, Type? exceptionType)
         {
             var input = new List<IProblem?> { null, CreateMockProblemWithId(1), CreateMockProblemWithId(5) };
-            _problemCreateFunc.Setup(x => x()).Returns(input);
+            _problemCreateFunc.Setup(x => x(It.IsAny<IList<object>>())).Returns(input);
             var sut = _fixture.Create<ProblemFactory>(); //have to create here as func above is used in constructor, and so needs to be Setup before creating sut
 
             if (exceptionType is not null)

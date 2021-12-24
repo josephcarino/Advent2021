@@ -21,10 +21,10 @@ namespace josephcarino.Advent2021.Controllers
             return problemService.GetProblemIds();
         }
 
-        [HttpGet("{id}/description/{partId}")]
-        public ContentResult GetProblemDescription(int id, int partId)
+        [HttpGet("{id}")]
+        public ActionResult<IProblem> GetProblem(int id)
         {
-            return base.Content(problemService.GetProblemDescription(id, GetProblemPartByInt(partId)), "text/html");
+            return Ok(problemService.GetProblemById(id));
         }
 
         [HttpPost("{id}/{partId}/answer")]

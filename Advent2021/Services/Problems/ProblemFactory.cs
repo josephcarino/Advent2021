@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using josephcarino.Advent2021.Helpers;
 using josephcarino.Advent2021.Services.Problems.Implementation;
 
 namespace josephcarino.Advent2021.Services.Problems
@@ -6,9 +7,9 @@ namespace josephcarino.Advent2021.Services.Problems
     public class ProblemFactory : IProblemFactory
     {
         private IDictionary<int, IProblem> problemsDict;
-        public ProblemFactory(Func<IEnumerable<IProblem?>> problemCreateFunc)
+        public ProblemFactory(Func<IList<object>, IEnumerable<IProblem?>> problemCreateFunc, IFileHelper fileHelper)
         {
-            problemsDict = problemCreateFunc().Where(x => x != null).GroupBy(x => x!.ProblemId).ToDictionary(k => k.Key, v => v.Last()!);
+            problemsDict = problemCreateFunc(new List<object>() { fileHelper }).Where(x => x != null).GroupBy(x => x!.ProblemId).ToDictionary(k => k.Key, v => v.Last()!);
         }
 
         public IEnumerable<int> GetProblemIds() => problemsDict.Keys.OrderBy(x => x);

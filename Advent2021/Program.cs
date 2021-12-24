@@ -1,4 +1,5 @@
 using josephcarino.Advent2021;
+using josephcarino.Advent2021.Helpers;
 using josephcarino.Advent2021.Services;
 using josephcarino.Advent2021.Services.Problems;
 using josephcarino.Advent2021.Services.Problems.Implementation;
@@ -32,12 +33,18 @@ void ConfigureServices(ConfigurationManager configuration, IServiceCollection se
 
     services.AddControllersWithViews();
 
-    Func<IEnumerable<IProblem?>> createProblems = () => Assembly.GetAssembly(typeof(Problem))!
+    Func<IList<object>, IEnumerable<IProblem?>> createProblems = (IList<object> args) => {
+        args.Insert(0, problemSettings);
+        object[] argsArray = args.ToArray();
+
+        return Assembly.GetAssembly(typeof(Problem))!
         .GetTypes().Where(TheType => TheType.IsClass && !TheType.IsAbstract && TheType.IsSubclassOf(typeof(Problem)))
-        .Select(a => Activator.CreateInstance(a, new object[] { problemSettings }) as IProblem);
+        .Select(a => Activator.CreateInstance(a, argsArray) as IProblem);
+    };
 
     services.AddSingleton(createProblems);
     services.AddSingleton<ProblemService>();
+    services.AddSingleton<IFileHelper, FileHelper>();
     services.AddSingleton<IProblemFactory, ProblemFactory>();
 }
 

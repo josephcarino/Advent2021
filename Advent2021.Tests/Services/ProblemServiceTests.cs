@@ -36,37 +36,6 @@ namespace josephcarino.Advent2021.Tests.Services
         [Theory]
         [InlineData(ProblemPart.part1)]
         [InlineData(ProblemPart.part2)]
-        public void GetProblemDescription_ShouldReturnCorrectPartOfCorrectProblem(ProblemPart part)
-        {
-            int problemId = 1;
-            string expectedDescription1 = "Description 1";
-            string expectedDescription2 = "Description 2";
-            Mock<IProblem> problem = _fixture.Create<Mock<IProblem>>();
-            _problemFactory.Setup(x => x.GetProblemById(problemId)).Returns(problem.Object).Verifiable();
-            problem.Setup(x => x.Description1).Returns(expectedDescription1);
-            problem.Setup(x => x.Description2).Returns(expectedDescription2);
-
-            string ret = _sut.GetProblemDescription(problemId, part);
-
-            _problemFactory.Verify(x => x.GetProblemById(problemId), Times.Once);
-            switch (part) {
-                case ProblemPart.part1:
-                    problem.Verify(x => x.Description1, Times.Once());
-                    problem.Verify(x => x.Description2, Times.Never());
-                    Assert.Equal(expectedDescription1, ret);
-                    break;
-                case ProblemPart.part2:
-                    problem.Verify(x => x.Description1, Times.Never());
-                    problem.Verify(x => x.Description2, Times.Once());
-                    Assert.Equal(expectedDescription2, ret);
-                    break;
-                default: throw new ArgumentException();
-            }
-        }
-
-        [Theory]
-        [InlineData(ProblemPart.part1)]
-        [InlineData(ProblemPart.part2)]
         public async Task AnswerProblem_ShouldReturnCorrectPartOfCorrectProblem(ProblemPart part)
         {
             int problemId = 1;
